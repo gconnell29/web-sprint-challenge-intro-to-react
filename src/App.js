@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Character from './components/Character';
+import Characters from './components/Characters';
 import './App.css';
 
 const App = () => {
   // Try to think through what state you'll need for this app before starting. Then build out
   // the state properties here.
   const [characters, setCharacters] = useState();
+  const [query, setQuery] = useState({
+    isSuccess: false,
+    isLoading: true,
+    isError: false
+  });
+  // console.log(characters);
 
   // Fetch characters from the API in an effect hook. Remember, anytime you have a 
   // side effect in a component, you want to think about which state and/or props it should
@@ -15,7 +21,9 @@ const App = () => {
     axios.get('https://swapi.dev/api/people')
     .then(response => {
       let people = response.data;
-      console.log(`API response:`, people);
+      // console.log(`API response:`, people);
+      setCharacters(people);
+      setQuery({...query, isSuccess: true})
     })
     .catch(error => {
       console.log('see error', error);
@@ -25,6 +33,7 @@ const App = () => {
   return (
     <div className="App">
       <h1 className="Header">Characters</h1>
+      <Characters chars={characters} query={query} />
     </div>
   );
 }
